@@ -11,15 +11,10 @@ last_time = 0
 past_time = 0
 game_time = {'minute': 0, 'second': 0}
 last_minute = 0
-team_data = {
-    'Manchester City': {'players':{}},
-    'Real Madrid': {'players':{}},
-    'Barcelona': {'players':{}},
-    'Arsenal': {'players':{}},
-    'Liverpool': {'players':{}},
-    'Bayern Munich': {'players':{}}
-    }
-team_logos = {}
+
+configuration_name ='default'
+team_data = None
+team_logos = {'main_menu': {}, 'game': {}}
 playing_teams = {'home_team': None, 'away_team': None}
 playing_players = {'home_team': {}, 'away_team': {}}
 score = {'home_team': 0, 'away_team': 0}
@@ -44,14 +39,8 @@ lb_heading2 = tk.Label(main_menu, text="Team Selection", font=("Times New Roman"
 lb_heading3 = tk.Label(main_menu, text="Select Your Teams:", font=("Ariel", 15), fg="lightgrey", bg="#1D1D29")
 lb_vs = tk.Label(main_menu, text="VS", font=("Sans-serif", 25, "bold italic"), fg="White", bg="#1D1D29")
 
-home_team_logo_frame = tk.Frame(main_menu, bg='white', bd=0, cursor='hand2', height=180,
-                      highlightthickness=0, relief=tk.RAISED, width=150)
-
-away_team_logo_frame = tk.Frame(main_menu, bg='white', bd=0, cursor='hand2', height=180,
-                      highlightthickness=0, relief=tk.RAISED, width=150)
-
-home_team_logo = tk.Label(home_team_logo_frame)
-away_team_logo = tk.Label(away_team_logo_frame)
+main_menu_home_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
+main_menu_away_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
 
 # Team Selection Dropdown
 
@@ -64,10 +53,8 @@ lb_heading1.grid(column=0, columnspan=3, row=0, pady=10)
 lb_heading2.grid(column=0, columnspan=3, row=1, pady=10)
 lb_heading3.grid(column=0, columnspan=3, row=2, pady=20)
 lb_vs.grid(column=1, row=3)
-home_team_logo_frame.grid(column=0, row=3, pady=20, padx=80)
-away_team_logo_frame.grid(column=2, row=3, pady=20, padx=80)
-home_team_logo.pack()
-away_team_logo.pack()
+main_menu_home_team_logo.grid(column=0, row=3, pady=20, padx=80)
+main_menu_away_team_logo.grid(column=2, row=3, pady=20, padx=80)
 cbox_home_team.grid(column=0, row=4, pady=40)
 cbox_away_team.grid(column=2, row=4, pady=40)
 btn_start_game.grid(column=1, row=4)
@@ -75,13 +62,31 @@ btn_start_game.grid(column=1, row=4)
 
 game_interface = tk.Frame(root, width=800, height=800)
 
-lb_timer = tk.Label(game_interface, font=("Ariel", 15), fg="red")
+
+lb_timer = tk.Label(game_interface, font=("Ariel", 25), fg="red")
+
+game_home_team_logo = tk.Label(game_interface)
+game_away_team_logo = tk.Label(game_interface)
+
+lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
+lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
+
+lb_home_team_score = tk.Label(game_interface, font=("Ariel", 80), fg="red")
+lb_away_team_score = tk.Label(game_interface, font=("Ariel", 80), fg="red")
+lb_colon = tk.Label(game_interface, text=':', font=("Ariel", 60), fg="red")
 
 track = tk.Label(game_interface)
 sign = tk.Label(game_interface, border=0)
 
-lb_timer.grid(column=2, row=0)
-track.grid(column=0, columnspan=5, row=1, padx=100, pady=50)
+lb_timer.grid(column=3, row=0, pady=10)
+game_home_team_logo.grid(column=1, row=1)
+game_away_team_logo.grid(column=5, row=1)
+lb_home_team_name.grid(column=1, row=2, pady=40)
+lb_away_team_name.grid(column=5, row=2, pady=40)
+lb_home_team_score.grid(column=2, row=1)
+lb_away_team_score.grid(column=4, row=1)
+lb_colon.grid(column=3, row=1)
+track.grid(column=1, columnspan=5, row=3, padx=100, pady=30)
 
 
 def bind_button_commands():
@@ -89,21 +94,33 @@ def bind_button_commands():
 
 
 def load_team_data():
+    global team_data
+    path = os.path.abspath('.\\configurations\\' + configuration_name + '.txt')
+    with open(path) as configuration:
+        team_data = eval(configuration.read())
+
     teams = list(team_data.keys())
     teams.insert(0, 'Select a Team')
     cbox_home_team['values'] = cbox_away_team['values'] = teams
     cbox_home_team.current(0), cbox_away_team.current(0)
 
-    team_logos.clear()
+    team_logos['main_menu'].clear(), team_logos['game'].clear()
     for team in teams:
-        team_logos[team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
-
+        team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((250, 250)))
+        team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
 
 def load_track_images():
     for image in ('blue_track', 'red_track'):
         track_images[image] = Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png')))
     for image in ('blue_sign', 'red_sign'):
         track_images[image] = ImageTk.PhotoImage(Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png'))))
+
+
+def update_main_menu():
+    playing_teams['home_team'] = cbox_home_team.get()
+    playing_teams['away_team'] = cbox_away_team.get()
+    main_menu_home_team_logo.config(image=team_logos['main_menu'][playing_teams['home_team']])
+    main_menu_away_team_logo.config(image=team_logos['main_menu'][playing_teams['away_team']])
 
 
 def start_game():
@@ -115,46 +132,53 @@ def start_game():
 
 
 def initialise_game():
-    score['home_team'] = score['away_team'] = 0
+    score['home_team'] = score['away_team'] = game_time['minute'] = game_time['second'] = 0
 
-    global position, past_time, last_minute
-    position = past_time = last_minute = 40
+    global position, past_time, last_minute, last_time
+    position = past_time = last_minute = 0
 
+    initialise_players()
+    initialise_game_team_logos()
+    initialise_game_team_names()
+    update_score()
+    update_track()
+
+    last_time = time.time()
+
+
+def initialise_players():
     playing_players['home_team'] = team_data[playing_teams['home_team']]['players'].copy()
-    for player in playing_players['home_team']:
+    for player in playing_players['home_team'].values():
         player['energy'] = 100
 
     playing_players['away_team'] = team_data[playing_teams['away_team']]['players'].copy()
-    for player in playing_players['away_team']:
+    for player in playing_players['away_team'].values():
         player['energy'] = 100
 
-    game_time['minute'] = game_time['second'] = 0
 
-    global last_time
-    last_time = time.time()
-
-    update_track()
+def initialise_game_team_logos():
+    game_home_team_logo.config(image=team_logos['game'][playing_teams['home_team']])
+    game_away_team_logo.config(image=team_logos['game'][playing_teams['away_team']])
 
 
-def update_playing_teams():
-    playing_teams['home_team'] = cbox_home_team.get()
-    playing_teams['away_team'] = cbox_away_team.get()
-    home_team_logo.config(image=team_logos[playing_teams['home_team']])
-    away_team_logo.config(image=team_logos[playing_teams['away_team']])
+def initialise_game_team_names():
+    lb_home_team_name.config(text=playing_teams['home_team'])
+    lb_away_team_name.config(text=playing_teams['away_team'])
+
 
 def update_time():
     global last_time, past_time
 
     now = time.time()
-    past_time += (now - last_time) * 0.25
+    past_time += (now - last_time) * 0.5
     last_time = now
     game_time['minute'] = math.trunc(past_time)
     game_time['second'] = math.trunc(math.modf(past_time)[0] * 60)
-    lb_timer.config(text=str(game_time['minute']) + ' : ' + str(game_time['second']))
+    lb_timer.config(text=str(game_time['minute']).zfill(2) + ' : ' + str(game_time['second']).zfill(2))
 
 
 def update_actions():
-    pass
+    print(last_minute)
 
 
 def update_track():
@@ -170,14 +194,27 @@ def update_track():
         sign.config(image=track_images['blue_sign'])
     else:
         sign.config(image=track_images['red_sign'])
-    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=63)
+    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=400)
+
+
+def update_score():
+    lb_home_team_score.config(text=str(score['home_team']))
+    lb_away_team_score.config(text=str(score['away_team']))
+
+
+
+def end_game():
+    global state
+    state = 'game_ended'
+    game_time['minute'] = 90
+    game_time['second'] = 0
 
 
 def main():
     global last_minute
 
     if state == 'main_menu':
-        update_playing_teams()
+        update_main_menu()
 
     elif state == 'playing':
         update_time()
@@ -185,6 +222,11 @@ def main():
             last_minute = game_time['minute']
             update_actions()
             update_track()
+            if last_minute>= 90:
+                end_game()
+
+    elif state == 'end_game':
+        pass
 
 
     root.after(1, main)
