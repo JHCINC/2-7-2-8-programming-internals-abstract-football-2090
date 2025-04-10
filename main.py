@@ -17,6 +17,7 @@ team_data = None
 team_logos = {'main_menu': {}, 'game': {}}
 playing_teams = {'home_team': None, 'away_team': None}
 playing_players = {'home_team': {}, 'away_team': {}}
+playing_player_orders = {'home_team': [], 'away_team': []}
 score = {'home_team': 0, 'away_team': 0}
 position = 0
 possession = 'home_team'
@@ -109,6 +110,7 @@ def load_team_data():
         team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((250, 250)))
         team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
 
+
 def load_track_images():
     for image in ('blue_track', 'red_track'):
         track_images[image] = Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png')))
@@ -150,10 +152,19 @@ def initialise_players():
     playing_players['home_team'] = team_data[playing_teams['home_team']]['players'].copy()
     for player in playing_players['home_team'].values():
         player['energy'] = 100
+        player['team'] = 'home_team'
 
     playing_players['away_team'] = team_data[playing_teams['away_team']]['players'].copy()
     for player in playing_players['away_team'].values():
         player['energy'] = 100
+        player['team'] = 'away_team'
+
+    playing_player_orders['home_team'].clear(), playing_player_orders['away_team'].clear()
+    for team in ('home_team', 'away_team'):
+        for position in ('attacker', 'midfield', 'defender', 'keeper'):
+            for player in playing_players[team].keys():
+                if player['position'] == position:
+                    playing_player_orders[team].append(player)
 
 
 def initialise_game_team_logos():
@@ -200,7 +211,6 @@ def update_track():
 def update_score():
     lb_home_team_score.config(text=str(score['home_team']))
     lb_away_team_score.config(text=str(score['away_team']))
-
 
 
 def end_game():
