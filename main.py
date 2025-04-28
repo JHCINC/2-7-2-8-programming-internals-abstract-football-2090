@@ -4,24 +4,28 @@ from PIL import Image, ImageTk
 import os
 import time
 import math
+import random
 
 
 state = 'main_menu'
 last_time = 0
 past_time = 0
 game_time = {'minute': 0, 'second': 0}
-last_minute = 0
+period = 0.5
+next_cycle = period
 
 configuration_name ='default'
 team_data = None
 team_logos = {'main_menu': {}, 'game': {}}
 playing_teams = {'home_team': None, 'away_team': None}
+number_teams = {1: 'home_team', -1: 'away_team'}
 playing_players = {'home_team': {}, 'away_team': {}}
-playing_player_orders = {'home_team': [], 'away_team': []}
 score = {'home_team': 0, 'away_team': 0}
 position = 0
-possession = 'home_team'
+possession = 1
+backed = False
 track_images = {'blue_track': None, 'red_track': None, 'blue_sign': None, 'red_sign': None, 'full_track': None}
+game_log = []
 
 
 root = tk.Tk()
@@ -110,7 +114,6 @@ def load_team_data():
         team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((250, 250)))
         team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
 
-
 def load_track_images():
     for image in ('blue_track', 'red_track'):
         track_images[image] = Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png')))
@@ -136,8 +139,19 @@ def start_game():
 def initialise_game():
     score['home_team'] = score['away_team'] = game_time['minute'] = game_time['second'] = 0
 
-    global position, past_time, last_minute, last_time
-    position = past_time = last_minute = 0
+    global position, past_time, last_time
+    position = past_time = last_time = 0
+
+    global next_cycle
+    next_cycle = period
+
+    global possession
+    possession = 1
+
+    global backed
+    backed = False
+
+    game_log.clear()
 
     initialise_players()
     initialise_game_team_logos()
@@ -150,21 +164,12 @@ def initialise_game():
 
 def initialise_players():
     playing_players['home_team'] = team_data[playing_teams['home_team']]['players'].copy()
-    for player in playing_players['home_team'].values():
+    for player in playing_players['home_team']:
         player['energy'] = 100
-        player['team'] = 'home_team'
 
     playing_players['away_team'] = team_data[playing_teams['away_team']]['players'].copy()
-    for player in playing_players['away_team'].values():
+    for player in playing_players['away_team']:
         player['energy'] = 100
-        player['team'] = 'away_team'
-
-    playing_player_orders['home_team'].clear(), playing_player_orders['away_team'].clear()
-    for team in ('home_team', 'away_team'):
-        for position in ('attacker', 'midfield', 'defender', 'keeper'):
-            for player in playing_players[team].keys():
-                if player['position'] == position:
-                    playing_player_orders[team].append(player)
 
 
 def initialise_game_team_logos():
@@ -188,8 +193,160 @@ def update_time():
     lb_timer.config(text=str(game_time['minute']).zfill(2) + ' : ' + str(game_time['second']).zfill(2))
 
 
+def calculate_modification(player, side):
+    relative_position = position * side
+    if player['position'] == 'keeper':
+        return 0
+
+    elif player['position'] == 'attacker':
+        if relative_position <= 0:
+            return 0
+        elif 0 < relative_position < 60:
+            return 0.4 + relative_position * 0.01
+        elif relative_position >= 60:
+            return 1
+
+    elif player['position'] == 'midfield':
+        if relative_position <= -60:
+            return 0.4
+        elif -60 < relative_position < -20:
+            return 1 - (-20 - relative_position) * 0.015
+        elif -20 <= relative_position <= 20:
+            return 1
+        elif 20 < relative_position < 60:
+            return 1 - (60 - relative_position) * 0.015
+        elif relative_position >= 60:
+            return 0.4
+
+    elif player['position'] == 'defender':
+        if relative_position <= -60:
+            return 1
+        elif -60 < relative_position < 0:
+            return 1 + relative_position * 0.01
+        elif relative_position >= 0:
+            return 0
+
+
+
 def update_actions():
-    print(last_minute)
+    update_tackle()
+    update_advance()
+    update_shooting()
+
+
+def update_tackle():
+    global possession, backed, position
+    attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
+    defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
+
+    attack_rolls = [random.randint(0, 10) for _ in attackers]
+
+    for defender in defenders:
+        tackle_difficulty = 5
+        defence_ability = defender['defence']
+        defence_modification = calculate_modification(defender, possession * -1)
+        defence_roll = random.randint(0, 8)
+
+        for attacker_index in range(len(attackers)):
+            attacker = attackers[attacker_index]
+            attack_ability = attacker['dribbling']
+            attack_modification = calculate_modification(attacker, possession)
+            attack_roll = attack_rolls[attacker_index]
+
+            if attack_ability + attack_roll >= defence_ability + defence_roll:
+                difficulty_increase = (10 + attack_ability) * attack_modification
+                tackle_difficulty += difficulty_increase
+
+        tackle_possibility = ((1 + defence_ability * 0.3) * defence_modification) / tackle_difficulty
+        if random.random() < tackle_possibility:
+            if random.randint(0, 1):
+                possession *= -1
+            else:
+                backed = True
+                position -= random.randint(5, 15)
+
+                if position > 100:
+                    position = 100
+                elif position < -100:
+                    position = -100
+
+
+def update_advance():
+    global backed, position
+
+    if backed:
+        backed = False
+        return
+
+    advance_result = 0
+    attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
+    defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
+    defence_rolls = [random.randrange(0, 7) for _ in defenders]
+
+    for attacker in attackers:
+        attack_efficiency = 1
+        attack_ability = attacker['advance']
+        attack_modification = calculate_modification(attacker, possession)
+        attack_roll = random.randrange(0, 9)
+        attack_expectation = 2 + 0.5 * attack_ability * attack_modification
+
+        for defender_index in range(len(defenders)):
+            defender = defenders[defender_index]
+            defence_ability = defender['defence']
+            defence_modification = calculate_modification(defender, possession * -1)
+            defence_roll = defence_rolls[defender_index]
+
+            if (defence_ability + defence_roll) >= (attack_ability + attack_roll):
+                attack_efficiency -= (0.1 + defence_ability * 0.02) * defence_modification
+
+        if attack_efficiency > 0:
+            attack_result = attack_efficiency * attack_expectation
+            advance_result += attack_result
+
+    random_modification = random.randint(0, 8)
+    position += round(advance_result + random_modification) * possession
+
+    if position > 100:
+        position = 100
+    elif position < -100:
+        position = -100
+
+
+def update_shooting():
+    global possession, position
+
+    attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
+    defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
+    keeper = [player for player in playing_players[number_teams[possession * -1]] if player['position'] == 'keeper'][0]
+    defence_rolls = [random.randint(0, 5) for _ in defenders]
+
+    for attacker in attackers:
+        shooting_difficulty = 5
+        attack_ability = attacker['finishing']
+        attack_modification = calculate_modification(attacker, possession)
+        attack_roll = random.randint(0, 6)
+        shooting_ability = shooting_ability * 0.3 * ((position * possession + 20) / 40) ** 2
+
+        for defender_index in range(len(defenders)):
+            defender = defenders[defender_index]
+            defence_ability = defender['defence']
+            defence_modification = calculate_modification(defender, possession * -1)
+            defence_roll = defence_rolls
+
+            if defence_ability + defence_roll > attack_ability + attack_roll:
+                shooting_difficulty += defence_ability * 2 + 10
+            else:
+                shooting_difficulty += defence_ability + 5
+
+    if random.random() < shooting_ability / shooting_difficulty:
+        shooting_possibility = (attack_ability * (1 + position * possession / 100)) / (keeper['defence'] * 2)
+        if random.random() < shooting_possibility:
+            score[number_teams[possession]] += 1
+            position = 0
+            possession *= -1
+        else:
+            position = random.randint(20, 60) * possession * -1
+            possession *= -1
 
 
 def update_track():
@@ -201,7 +358,7 @@ def update_track():
     track_images['full_track'] = ImageTk.PhotoImage(full_track)
     track.config(image=track_images['full_track'])
 
-    if possession == 'home_team':
+    if possession == 1:
         sign.config(image=track_images['blue_sign'])
     else:
         sign.config(image=track_images['red_sign'])
@@ -221,23 +378,22 @@ def end_game():
 
 
 def main():
-    global last_minute
+    global next_cycle
 
     if state == 'main_menu':
         update_main_menu()
 
     elif state == 'playing':
         update_time()
-        if game_time['minute'] > last_minute:
-            last_minute = game_time['minute']
+        if past_time > next_cycle:
+            next_cycle += period
             update_actions()
             update_track()
-            if last_minute>= 90:
+            if past_time >= 90:
                 end_game()
 
     elif state == 'end_game':
         pass
-
 
     root.after(1, main)
 
