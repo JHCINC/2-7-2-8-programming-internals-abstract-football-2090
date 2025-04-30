@@ -1,0 +1,85 @@
+{
+    'Manchester City': {'players':{
+        'Erling Haaland': {'position': 'attacker', 'stamina': 10, 'advance': 4, 'defence': 1, 'dribbling': 7, 'finishing': 10},
+        'Phil Foden': {'position': 'attacker', 'stamina': 9, 'advance': 6, 'defence': 2, 'dribbling': 9, 'finishing': 7},
+        'Bernardo Silva': {'position': 'attacker', 'stamina': 8, 'advance': 6, 'defence': 4, 'dribbling': 10, 'finishing': 7},
+        'Kevin De Bruyne': {'position': 'midfield', 'stamina': 7, 'advance': 10, 'defence': 7, 'dribbling': 8, 'finishing': 8},
+        'Rodri': {'position': 'midfield', 'stamina': 10, 'advance': 9, 'defence': 9, 'dribbling': 7, 'finishing': 5},
+        'John Stones': {'position': 'midfield', 'stamina': 8, 'advance': 7, 'defence': 9, 'dribbling': 6, 'finishing': 5},
+        'Josko Gvardiol': {'position': 'defender', 'stamina': 10, 'advance': 4, 'defence': 10, 'dribbling': 5, 'finishing': 3},
+        'Ruben Dias': {'position': 'defender', 'stamina': 10, 'advance': 4, 'defence': 10, 'dribbling': 6, 'finishing': 2},
+        'Menuel Akanji': {'position': 'defender', 'stamina': 8, 'advance': 2, 'defence': 8, 'dribbling': 4, 'finishing': 1},
+        'Abdukodir Khusanov': {'position': 'defender', 'stamina': 9, 'advance': 2, 'defence': 9, 'dribbling': 2, 'finishing': 0},
+        'Ederson': {'position': 'keeper', 'stamina': 10, 'advance': 1, 'defence': 10, 'dribbling': 1, 'finishing': 1}
+    }},
+
+    'Real Madrid': {'players':{
+        'Kylian Mbappe': {'position': 'attacker', 'stamina': 10, 'advance': 5, 'defence': 1, 'dribbling': 10, 'finishing': 8},
+        'Vinicius Jr': {'position': 'attacker', 'stamina': 8, 'advance': 5, 'defence': 1, 'dribbling': 10, 'finishing': 7},
+        'Rodrygo': {'position': 'attacker', 'stamina': 7, 'advance': 6, 'defence': 3, 'dribbling': 9, 'finishing': 8},
+        'Bellingham': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 6, 'dribbling': 8, 'finishing': 7},
+        'Tchuameni': {'position': 'midfield', 'stamina': 10, 'advance': 5, 'defence': 7, 'dribbling': 5, 'finishing': 4},
+        'Valverde': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 6, 'dribbling': 6, 'finishing': 5},
+        'David Alaba': {'position': 'defender', 'stamina': 7, 'advance': 4, 'defence': 8, 'dribbling': 3, 'finishing': 2},
+        'Eder Militao': {'position': 'defender', 'stamina': 9, 'advance': 3, 'defence': 10, 'dribbling': 4, 'finishing': 0},
+        'Rudiger': {'position': 'defender', 'stamina': 10, 'advance': 3, 'defence': 9, 'dribbling': 2, 'finishing': 2},
+        'Lucas Vazquez': {'position': 'defender', 'stamina': 7, 'advance': 5, 'defence': 7, 'dribbling': 5, 'finishing': 2},
+        'Thibaut Courtois': {'position': 'keeper', 'stamina': 10, 'advance': 0, 'defence': 10, 'dribbling': 0, 'finishing': 0}
+    }},
+
+    'Barcelona': {'players':{
+        'Robert Lewandowski': {'position': 'attacker', 'stamina': 8, 'advance': 4, 'defence': 1, 'dribbling': 5, 'finishing': 10},
+        'Raphinha': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 3, 'dribbling': 9, 'finishing': 8},
+        'Lamine Yamal': {'position': 'attacker', 'stamina': 7, 'advance': 7, 'defence': 3, 'dribbling': 10, 'finishing': 6},
+        'Pedri': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 5, 'dribbling': 8, 'finishing': 7},
+        'Marc Casado': {'position': 'midfield', 'stamina': 8, 'advance': 8, 'defence': 8, 'dribbling': 7, 'finishing': 3},
+        'Gavi': {'position': 'midfield', 'stamina': 10, 'advance': 8, 'defence': 6, 'dribbling': 8, 'finishing': 4},
+        'Alejandro Balde': {'position': 'defender', 'stamina': 9, 'advance': 3, 'defence': 7, 'dribbling': 7, 'finishing': 2},
+        'Ronald Araujo': {'position': 'defender', 'stamina': 10, 'advance': 2, 'defence': 10, 'dribbling': 3, 'finishing': 1},
+        'Inigo Martinez': {'position': 'defender', 'stamina': 10, 'advance': 5, 'defence': 9, 'dribbling': 4, 'finishing': 1},
+        'Jules Kounde': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 8, 'dribbling': 10, 'finishing': 4},
+        'Szczesny': {'position': 'keeper', 'stamina': 10, 'advance': , 'defence': 10, 'dribbling': 0, 'finishing': 0}
+    }},
+
+    'Arsenal': {'players':{
+        'Gabriel Jesus': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Gabriel Martinelli': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Bukayo Saka': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Martin Odegaard': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Declan Rice': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Merino': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Calafiori': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'William Saliba': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Gabriel': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Ben White': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'David Raya': {'position': 'keeper', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Liverpool': {'players':{
+        'Darwin Nunez': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Luis Diaz': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Mo Salah': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Szoboszlai': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Alexis Mac Allister': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Ryan Gravenberch': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Andrew Robertson': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Ibrahim Konate': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Virgil Van Dijk': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Trent Alexander-Arnold': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Alisson': {'position': 'keeper', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Bayern Munich': {'players':{
+        'Harry Kane': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Jamal Musiala': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Leroy Sane': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Laimer': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Leon Goretzka': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Joshua Kimmich': {'position': 'midfield', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Alphonso Davies': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Upamecano': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Kim Min Jae': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Sacha Boey': {'position': 'defender', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        'Manuel Neuer': {'position': 'keeper', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }}
+    }

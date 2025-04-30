@@ -1,0 +1,85 @@
+{
+    'Manchester City': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Real Madrid': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Barcelona': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Arsenal': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Liverpool': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }},
+
+    'Bayern Munich': {'players':{
+        '1': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '2': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '3': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '4': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '5': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '6': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '7': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '8': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '9': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '10': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10},
+        '11': {'position': 'attacker', 'stamina': 10, 'advance': 10, 'defence': 10, 'dribbling': 10, 'finishing': 10}
+    }}
+    }
