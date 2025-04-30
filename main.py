@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
@@ -25,34 +26,42 @@ position = 0
 possession = 1
 backed = False
 track_images = {'blue_track': None, 'red_track': None, 'blue_sign': None, 'red_sign': None, 'full_track': None}
-game_log = []
 
 
 root = tk.Tk()
 root.resizable(width=False, height=False)
-root.title("Abstract Football 2025")
+root.title('Abstract Football 2025')
 
 
-main_menu = tk.Frame(root, bg="#1D1D29")
+main_menu = tk.Frame(root, bg='#1D1D29')
 main_menu.pack()
 
 # Labels for Heading and Subheading of GUIS
-lb_heading1 = tk.Label(main_menu, text="Ultimate Team Football 2025", font=("Times New Roman", 28, "bold italic"), fg="lightgrey", bg="#1D1D29")
-lb_heading2 = tk.Label(main_menu, text="Team Selection", font=("Times New Roman", 20, "bold"), fg="lightgrey", bg="#1D1D29")
+lb_heading1 = tk.Label(main_menu, text='Ultimate Team Football 2025', font=('Times New Roman', 28, 'bold italic'), fg='lightgrey', bg='#1D1D29')
+lb_heading2 = tk.Label(main_menu, text='Team Selection', font=('Times New Roman', 20, 'bold'), fg='lightgrey', bg='#1D1D29')
 
 # Labels for teams
-lb_heading3 = tk.Label(main_menu, text="Select Your Teams:", font=("Ariel", 15), fg="lightgrey", bg="#1D1D29")
-lb_vs = tk.Label(main_menu, text="VS", font=("Sans-serif", 25, "bold italic"), fg="White", bg="#1D1D29")
+lb_heading3 = tk.Label(main_menu, text='Select Your Teams:', font=('Ariel', 15), fg='lightgrey', bg='#1D1D29')
+lb_vs = tk.Label(main_menu, text='VS', font=('Sans-serif', 25, 'bold italic'), fg='White', bg='#1D1D29')
 
 main_menu_home_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
 main_menu_away_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
 
 # Team Selection Dropdown
+cbox_home_team = ttk.Combobox(main_menu, width=20, font=('Times New Roman', 12, 'bold'), state='readonly')
+cbox_away_team = ttk.Combobox(main_menu, width=20, font=('Times New Roman', 12, 'bold'), state='readonly')
 
-cbox_home_team = ttk.Combobox(main_menu, width=20, font=("Times New Roman", 12, "bold"), state="readonly")
-cbox_away_team = ttk.Combobox(main_menu, width=20, font=("Times New Roman", 12, "bold"), state="readonly")
+btn_start_game = tk.Button(main_menu, text='Start Game!', font=('Times New Roman', 20, 'bold'), fg='red', bg='lightblue')
 
-btn_start_game = tk.Button(main_menu, text='Start Game!', font=("Times New Roman", 20, "bold"), fg="red", bg="lightblue")
+lb_configurations = tk.Label(main_menu, text='Select Your Configuration:', font=('Ariel', 15), fg='lightgrey', bg='#1D1D29')
+
+cbox_configuration = ttk.Combobox(main_menu, width=25, font=('Times New Roman', 12, 'bold'), state='readonly')
+cbox_configuration['values'] = [file.split('.')[0] for file in os.listdir(os.path.abspath('.\\configurations'))]
+if 'default' in cbox_configuration['values']:
+    cbox_configuration.set('default')
+
+btn_load_configuration = tk.Button(main_menu, text='Load the configuration', font=('Times New Roman', 20, 'bold'), fg='red', bg='lightblue')
+
 
 lb_heading1.grid(column=0, columnspan=3, row=0, pady=10)
 lb_heading2.grid(column=0, columnspan=3, row=1, pady=10)
@@ -62,13 +71,16 @@ main_menu_home_team_logo.grid(column=0, row=3, pady=20, padx=80)
 main_menu_away_team_logo.grid(column=2, row=3, pady=20, padx=80)
 cbox_home_team.grid(column=0, row=4, pady=40)
 cbox_away_team.grid(column=2, row=4, pady=40)
-btn_start_game.grid(column=1, row=4)
+btn_start_game.grid(column=1, row=4, pady=20)
+lb_configurations.grid(column=1, row=5, pady=60)
+cbox_configuration.grid(column=1, row=6, pady=20)
+btn_load_configuration.grid(column=1, row=7, pady=20)
 
 
 game_interface = tk.Frame(root, width=800, height=800)
 
 
-lb_timer = tk.Label(game_interface, font=("Ariel", 25), fg="red")
+lb_timer = tk.Label(game_interface, font=('Ariel', 25), fg='red')
 
 game_home_team_logo = tk.Label(game_interface)
 game_away_team_logo = tk.Label(game_interface)
@@ -76,31 +88,95 @@ game_away_team_logo = tk.Label(game_interface)
 lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
 lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
 
-lb_home_team_score = tk.Label(game_interface, font=("Ariel", 80), fg="red")
-lb_away_team_score = tk.Label(game_interface, font=("Ariel", 80), fg="red")
-lb_colon = tk.Label(game_interface, text=':', font=("Ariel", 60), fg="red")
+lb_home_team_score = tk.Label(game_interface, font=('Ariel', 80), fg='red')
+lb_away_team_score = tk.Label(game_interface, font=('Ariel', 80), fg='red')
+lb_colon = tk.Label(game_interface, text=':', font=('Ariel', 60), fg='red')
+
+event_box = tk.Listbox(game_interface, width=100, height=8)
 
 track = tk.Label(game_interface)
 sign = tk.Label(game_interface, border=0)
 
+btn_return = tk.Button(game_interface, width=8, height=1, text='Return', font=('Times New Roman', 15), bg='yellow')
+btn_pause = tk.Button(game_interface, width=8, height=1, text='Pause', font=('Times New Roman', 15), bg='yellow')
+btn_restart = tk.Button(game_interface, width=8, height=1, text='Restart', font=('Times New Roman', 15), bg='yellow')
+
+
 lb_timer.grid(column=3, row=0, pady=10)
 game_home_team_logo.grid(column=1, row=1)
 game_away_team_logo.grid(column=5, row=1)
-lb_home_team_name.grid(column=1, row=2, pady=40)
-lb_away_team_name.grid(column=5, row=2, pady=40)
 lb_home_team_score.grid(column=2, row=1)
 lb_away_team_score.grid(column=4, row=1)
 lb_colon.grid(column=3, row=1)
+lb_home_team_name.grid(column=1, row=2, pady=20)
+lb_away_team_name.grid(column=5, row=2, pady=20)
+event_box.grid(column=2, columnspan=3, row=2)
 track.grid(column=1, columnspan=5, row=3, padx=100, pady=30)
+btn_return.place(x=540, y=910)
+btn_pause.place(x=690, y=910)
+btn_restart.place(x=840, y=910)
+
+
+player_box_parts = []
+for player in range(22):
+    if player <= 10:
+        border_color = 'skyblue'
+    else:
+        border_color = 'orange'
+    player_box = tk.Frame(game_interface, width=250, height=60, highlightbackground=border_color, highlightthickness=2)
+    lb_player_name = tk.Label(player_box)
+    lb_player_position = tk.Label(player_box)
+    lb_player_advance = tk.Label(player_box)
+    lb_player_defence = tk.Label(player_box)
+    lb_player_dribbling = tk.Label(player_box)
+    lb_player_finishing = tk.Label(player_box)
+    lb_player_stamina = tk.Label(player_box)
+    lb_player_energy = tk.Label(player_box)
+
+    lb_player_name.grid(column=0, row=0)
+    lb_player_position.grid(column=0, row=1)
+    lb_player_advance.grid(column=1, row=0)
+    lb_player_defence.grid(column=1, row=1)
+    lb_player_dribbling.grid(column=2, row=0)
+    lb_player_finishing.grid(column=2, row=1)
+    lb_player_stamina.grid(column=3, row=0)
+    lb_player_energy.grid(column=3, row=1)
+
+    player_box_parts.append(
+        [lb_player_name, lb_player_position, lb_player_advance, lb_player_defence, lb_player_dribbling, lb_player_finishing,
+         lb_player_stamina, lb_player_energy]
+    )
+
+    if player <= 5:
+        column = 1
+        row = 4 + player
+        sticky = 'W'
+    elif player <= 10:
+        column = 2
+        row = 4 + (player % 6)
+        sticky = 'W'
+    elif player <= 16:
+        column = 5
+        row = 4 + (player % 11)
+        sticky = 'E'
+    else:
+        column = 4
+        row = 4 + (player % 17)
+        sticky = 'E'
+    player_box.grid(column=column, row=row, padx=5, pady=10, sticky=sticky)
 
 
 def bind_button_commands():
     btn_start_game.config(command=start_game)
+    btn_load_configuration.config(command=load_configuration)
+    btn_return.config(command=return_main_menu)
+    btn_pause.config(command=pause)
+    btn_restart.config(command=initialise_game)
 
 
-def load_team_data():
+def load_configuration():
     global team_data
-    path = os.path.abspath('.\\configurations\\' + configuration_name + '.txt')
+    path = os.path.abspath('.\\configurations\\' + cbox_configuration.get() + '.txt')
     with open(path) as configuration:
         team_data = eval(configuration.read())
 
@@ -130,11 +206,22 @@ def update_main_menu():
 
 def start_game():
     global state
+
+    if playing_teams['home_team'] == 'Select a Team' or playing_teams['away_team'] == 'Select a Team':
+        tk.messagebox.showwarning('Warning', 'You must select both two teams.')
+        return
+
     state = 'playing'
-    main_menu.destroy()
+    main_menu.pack_forget()
     game_interface.pack()
     initialise_game()
 
+
+def return_main_menu():
+    global state
+    state = 'main_menu'
+    game_interface.pack_forget()
+    main_menu.pack()
 
 def initialise_game():
     score['home_team'] = score['away_team'] = game_time['minute'] = game_time['second'] = 0
@@ -151,13 +238,14 @@ def initialise_game():
     global backed
     backed = False
 
-    game_log.clear()
+    event_box.delete(0, tk.END)
 
     initialise_players()
     initialise_game_team_logos()
     initialise_game_team_names()
     update_score()
     update_track()
+    update_player_box_parts()
 
     last_time = time.time()
 
@@ -186,11 +274,19 @@ def update_time():
     global last_time, past_time
 
     now = time.time()
-    past_time += (now - last_time) * 0.5
+    past_time += (now - last_time) * 5
     last_time = now
     game_time['minute'] = math.trunc(past_time)
     game_time['second'] = math.trunc(math.modf(past_time)[0] * 60)
     lb_timer.config(text=str(game_time['minute']).zfill(2) + ' : ' + str(game_time['second']).zfill(2))
+
+
+def pause():
+    global state
+    if state == 'pause':
+        state = 'playing'
+    else:
+        state = 'pause'
 
 
 def calculate_modification(player, side):
@@ -227,6 +323,16 @@ def calculate_modification(player, side):
             return 0
 
 
+def calculate_ability(player):
+    if player['energy'] > 70:
+        return 1
+    elif player['energy'] > 40:
+        return 0.95 - (70 - player['energy']) / 200
+    elif player['energy'] > 0:
+        return 0.7 - (40 - player['energy']) / 200
+    else:
+        return 0.5
+
 
 def update_actions():
     update_tackle()
@@ -243,15 +349,23 @@ def update_tackle():
 
     for defender in defenders:
         tackle_difficulty = 5
-        defence_ability = defender['defence']
+        defence_ability = defender['defence'] * calculate_ability(defender)
         defence_modification = calculate_modification(defender, possession * -1)
         defence_roll = random.randint(0, 8)
 
+        defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
+        if defender['energy'] < 0:
+            defender['energy'] = 0
+
         for attacker_index in range(len(attackers)):
             attacker = attackers[attacker_index]
-            attack_ability = attacker['dribbling']
+            attack_ability = attacker['dribbling'] * calculate_ability(attacker)
             attack_modification = calculate_modification(attacker, possession)
             attack_roll = attack_rolls[attacker_index]
+
+            attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
+            if attacker['energy'] < 0:
+                attacker['energy'] = 0
 
             if attack_ability + attack_roll >= defence_ability + defence_roll:
                 difficulty_increase = (10 + attack_ability) * attack_modification
@@ -261,6 +375,11 @@ def update_tackle():
         if random.random() < tackle_possibility:
             if random.randint(0, 1):
                 possession *= -1
+                random_time = past_time - random.random() * period
+                message = defender['name'] + ' grabbed the ball at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + '.'
+                event_box.insert(tk.END, message)
+                return
+
             else:
                 backed = True
                 position -= random.randint(5, 15)
@@ -269,6 +388,8 @@ def update_tackle():
                     position = 100
                 elif position < -100:
                     position = -100
+
+                return
 
 
 def update_advance():
@@ -281,22 +402,30 @@ def update_advance():
     advance_result = 0
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
-    defence_rolls = [random.randrange(0, 7) for _ in defenders]
+    defence_rolls = [random.randrange(0, 5) for _ in defenders]
 
     for attacker in attackers:
         attack_efficiency = 1
-        attack_ability = attacker['advance']
+        attack_ability = attacker['advance'] * calculate_ability(attacker)
         attack_modification = calculate_modification(attacker, possession)
-        attack_roll = random.randrange(0, 9)
-        attack_expectation = 2 + 0.5 * attack_ability * attack_modification
+        attack_roll = random.randrange(0, 6)
+        attack_expectation = 2 + 0.4 * attack_ability * attack_modification
+
+        attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
+        if attacker['energy'] < 0:
+            attacker['energy'] = 0
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
-            defence_ability = defender['defence']
+            defence_ability = defender['defence'] * calculate_ability(defender)
             defence_modification = calculate_modification(defender, possession * -1)
             defence_roll = defence_rolls[defender_index]
 
-            if (defence_ability + defence_roll) >= (attack_ability + attack_roll):
+            defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
+            if defender['energy'] < 0:
+                defender['energy'] = 0
+
+            if (defence_ability + defence_roll) > (attack_ability + attack_roll):
                 attack_efficiency -= (0.1 + defence_ability * 0.02) * defence_modification
 
         if attack_efficiency > 0:
@@ -315,38 +444,58 @@ def update_advance():
 def update_shooting():
     global possession, position
 
+    if position * possession < 0:
+        return
+
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
     keeper = [player for player in playing_players[number_teams[possession * -1]] if player['position'] == 'keeper'][0]
     defence_rolls = [random.randint(0, 5) for _ in defenders]
 
     for attacker in attackers:
-        shooting_difficulty = 5
-        attack_ability = attacker['finishing']
+        shooting_difficulty = 20
+        attack_ability = attacker['finishing'] * calculate_ability(attacker)
         attack_modification = calculate_modification(attacker, possession)
         attack_roll = random.randint(0, 6)
-        shooting_ability = shooting_ability * 0.3 * ((position * possession + 20) / 40) ** 2
+        shooting_ability = attack_ability * 0.3 * attack_modification * (1 + ((position * possession) / 50) ** 2)
+
+        attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
+        if attacker['energy'] < 0:
+            attacker['energy'] = 0
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
-            defence_ability = defender['defence']
+            defence_ability = defender['defence'] * calculate_ability(defender)
             defence_modification = calculate_modification(defender, possession * -1)
-            defence_roll = defence_rolls
+            defence_roll = defence_rolls[defender_index]
+
+            defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
+            if defender['energy'] < 0:
+                defender['energy'] = 0
 
             if defence_ability + defence_roll > attack_ability + attack_roll:
-                shooting_difficulty += defence_ability * 2 + 10
+                shooting_difficulty += (defence_ability + 5) * defence_modification
             else:
-                shooting_difficulty += defence_ability + 5
+                shooting_difficulty += (defence_ability + 5) * defence_modification / 2
 
-    if random.random() < shooting_ability / shooting_difficulty:
-        shooting_possibility = (attack_ability * (1 + position * possession / 100)) / (keeper['defence'] * 2)
-        if random.random() < shooting_possibility:
-            score[number_teams[possession]] += 1
-            position = 0
-            possession *= -1
-        else:
-            position = random.randint(20, 60) * possession * -1
-            possession *= -1
+        if random.random() < shooting_ability / shooting_difficulty:
+            shooting_possibility = (attack_ability * (0.5 + position * possession / 100 * 1.5)) / (keeper['defence'] * 3 + 20)
+            if random.random() < shooting_possibility:
+                score[number_teams[possession]] += 1
+                position = 0
+                possession *= -1
+                random_time = past_time - random.random() * period
+                message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + '!'
+                event_box.insert(tk.END, message)
+                return
+
+            else:
+                position = random.randint(20, 60) * possession * -1
+                possession *= -1
+                random_time = past_time - random.random() * period
+                message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + ' but missed the goal.'
+                event_box.insert(tk.END, message)
+                return
 
 
 def update_track():
@@ -362,7 +511,24 @@ def update_track():
         sign.config(image=track_images['blue_sign'])
     else:
         sign.config(image=track_images['red_sign'])
-    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=400)
+    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=430)
+
+
+def update_player_box_parts():
+    for index in range(22):
+        if index <= 10:
+            player = playing_players['home_team'][index]
+        else:
+            player = playing_players['away_team'][index % 11]
+        parts = player_box_parts[index]
+        parts[0].config(text=player['name'])
+        parts[1].config(text=player['position'])
+        parts[2].config(text='advance: ' + str(round(player['advance'] * calculate_ability(player), 1)))
+        parts[3].config(text='defence: ' + str(round(player['defence'] * calculate_ability(player), 1)))
+        parts[4].config(text='dribbling: ' + str(round(player['dribbling'] * calculate_ability(player), 1)))
+        parts[5].config(text='finishing: ' + str(round(player['finishing'] * calculate_ability(player), 1)))
+        parts[6].config(text='stamina: ' + str(player['stamina']))
+        parts[7].config(text='energy: ' + str(round(player['energy'])))
 
 
 def update_score():
@@ -388,9 +554,15 @@ def main():
         if past_time > next_cycle:
             next_cycle += period
             update_actions()
+            update_score()
             update_track()
+            update_player_box_parts()
             if past_time >= 90:
                 end_game()
+
+    elif state == 'pause':
+        global last_time
+        last_time = time.time()
 
     elif state == 'end_game':
         pass
@@ -398,7 +570,7 @@ def main():
     root.after(1, main)
 
 
-load_team_data()
+load_configuration()
 load_track_images()
 bind_button_commands()
 root.after(1, main)
