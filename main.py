@@ -24,7 +24,7 @@ playing_players = {'home_team': {}, 'away_team': {}}
 score = {'home_team': 0, 'away_team': 0}
 position = 0
 possession = 1
-backed = False
+delayed = False
 track_images = {'blue_track': None, 'red_track': None, 'blue_sign': None, 'red_sign': None, 'full_track': None}
 
 
@@ -32,76 +32,84 @@ root = tk.Tk()
 root.resizable(width=False, height=False)
 root.title('Abstract Football 2025')
 
+# ---------------------------------------------------Main Menu Widgets--------------------------------------------------
 
+# Instantiation of Frame "main_menu" as the Master of All the Main Menu Widgets
 main_menu = tk.Frame(root, bg='#1D1D29')
-main_menu.pack()
+main_menu.pack() # Display Main Menu from the Beginning
 
-# Labels for Heading and Subheading of GUIS
-lb_heading1 = tk.Label(main_menu, text='Ultimate Team Football 2025', font=('Times New Roman', 28, 'bold italic'), fg='lightgrey', bg='#1D1D29')
-lb_heading2 = tk.Label(main_menu, text='Team Selection', font=('Times New Roman', 20, 'bold'), fg='lightgrey', bg='#1D1D29')
+# Labels for Heading and Subheading
+lb_heading1 = tk.Label(main_menu, text='Abstract Football 2025', font=('Times New Roman', 35, 'bold italic'), fg='lightgrey', bg='#1D1D29')
+lb_heading2 = tk.Label(main_menu, text='Team Selection', font=('Verdana', 15, 'bold'), fg='lightgrey', bg='#1D1D29')
 
-# Labels for teams
-lb_heading3 = tk.Label(main_menu, text='Select Your Teams:', font=('Ariel', 15), fg='lightgrey', bg='#1D1D29')
-lb_vs = tk.Label(main_menu, text='VS', font=('Sans-serif', 25, 'bold italic'), fg='White', bg='#1D1D29')
-
+# Labels for Team Logos and the "VS" between
 main_menu_home_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
 main_menu_away_team_logo = tk.Label(main_menu, bg='white', width=250, height=250)
+lb_vs = tk.Label(main_menu, text='V\u2009S', font=('Franklin Gothic Demi', 45, 'italic'), fg='White', bg='#1D1D29') # \u2009 is a quarter space
 
 # Team Selection Dropdown
 cbox_home_team = ttk.Combobox(main_menu, width=20, font=('Times New Roman', 12, 'bold'), state='readonly')
 cbox_away_team = ttk.Combobox(main_menu, width=20, font=('Times New Roman', 12, 'bold'), state='readonly')
 
-btn_start_game = tk.Button(main_menu, text='Start Game!', font=('Times New Roman', 20, 'bold'), fg='red', bg='lightblue')
+# Start Game Button
+btn_start_game = tk.Button(main_menu, text='Start Game!', font=('Helvetica', 20, 'bold'), fg='lightgrey', bg='#c0392b')
 
-lb_configurations = tk.Label(main_menu, text='Select Your Configuration:', font=('Ariel', 15), fg='lightgrey', bg='#1D1D29')
-
+# Label, Dropdowns and Button for Configuration Selection
+lb_configurations = tk.Label(main_menu, text='Configuration Selection', font=('Verdana', 15, 'bold'), fg='lightgrey', bg='#1D1D29')
 cbox_configuration = ttk.Combobox(main_menu, width=25, font=('Times New Roman', 12, 'bold'), state='readonly')
 cbox_configuration['values'] = [file.split('.')[0] for file in os.listdir(os.path.abspath('.\\configurations'))]
 if 'default' in cbox_configuration['values']:
-    cbox_configuration.set('default')
+    cbox_configuration.set('default') # Use the "default" Configuration if Exist
+btn_load_configuration = tk.Button(main_menu, text='Load Configuration', font=('Helvetica', 20, 'bold'), fg='lightgrey', bg='#2c3e50')
 
-btn_load_configuration = tk.Button(main_menu, text='Load the configuration', font=('Times New Roman', 20, 'bold'), fg='red', bg='lightblue')
 
-
-lb_heading1.grid(column=0, columnspan=3, row=0, pady=10)
+# Place all the Widgets through Grid
+lb_heading1.grid(column=0, columnspan=3, row=0, pady=25)
 lb_heading2.grid(column=0, columnspan=3, row=1, pady=10)
-lb_heading3.grid(column=0, columnspan=3, row=2, pady=20)
-lb_vs.grid(column=1, row=3)
-main_menu_home_team_logo.grid(column=0, row=3, pady=20, padx=80)
-main_menu_away_team_logo.grid(column=2, row=3, pady=20, padx=80)
-cbox_home_team.grid(column=0, row=4, pady=40)
-cbox_away_team.grid(column=2, row=4, pady=40)
-btn_start_game.grid(column=1, row=4, pady=20)
-lb_configurations.grid(column=1, row=5, pady=60)
-cbox_configuration.grid(column=1, row=6, pady=20)
-btn_load_configuration.grid(column=1, row=7, pady=20)
+lb_vs.grid(column=1, row=2)
+main_menu_home_team_logo.grid(column=0, row=2, pady=20, padx=80)
+main_menu_away_team_logo.grid(column=2, row=2, pady=20, padx=80)
+cbox_home_team.grid(column=0, row=3, pady=40)
+cbox_away_team.grid(column=2, row=3, pady=40)
+btn_start_game.grid(column=1, row=3, pady=30)
+lb_configurations.grid(column=1, row=4, pady=20)
+cbox_configuration.grid(column=1, row=5, pady=5)
+btn_load_configuration.grid(column=1, row=6, pady=40)
 
+# -------------------------------------------------Game Interface Widget------------------------------------------------
 
+# Instantiation of Frame "game_interface" as the Master of All the Game Interface Widget
 game_interface = tk.Frame(root, width=800, height=800)
 
-
+# Timer for the Game
 lb_timer = tk.Label(game_interface, font=('Ariel', 25), fg='red')
 
+# Labels for Team Logos
 game_home_team_logo = tk.Label(game_interface)
 game_away_team_logo = tk.Label(game_interface)
 
-lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
-lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='red')
+# Labels for Team Names - Blue for the Home Team - Red for the Away Team
+lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='#3A86FF')
+lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='#c0392b')
 
+# Labels for Team Scores and the Colon Between
 lb_home_team_score = tk.Label(game_interface, font=('Ariel', 80), fg='red')
 lb_away_team_score = tk.Label(game_interface, font=('Ariel', 80), fg='red')
 lb_colon = tk.Label(game_interface, text=':', font=('Ariel', 60), fg='red')
 
+# List Box to Display All the Major Events in the Game
 event_box = tk.Listbox(game_interface, width=100, height=8)
 
+# Track and Sign to Display the Position and Possession of the Ball
 track = tk.Label(game_interface)
 sign = tk.Label(game_interface, border=0)
 
+# Buttons for Functions Return, Pause and Restart
 btn_return = tk.Button(game_interface, width=8, height=1, text='Return', font=('Times New Roman', 15), bg='yellow')
 btn_pause = tk.Button(game_interface, width=8, height=1, text='Pause', font=('Times New Roman', 15), bg='yellow')
 btn_restart = tk.Button(game_interface, width=8, height=1, text='Restart', font=('Times New Roman', 15), bg='yellow')
 
-
+# Place all the Widgets through Grid
 lb_timer.grid(column=3, row=0, pady=10)
 game_home_team_logo.grid(column=1, row=1)
 game_away_team_logo.grid(column=5, row=1)
@@ -116,13 +124,13 @@ btn_return.place(x=540, y=910)
 btn_pause.place(x=690, y=910)
 btn_restart.place(x=840, y=910)
 
-
-player_box_parts = []
+# Player Box to Display All the Attributes of All the Players
+player_box_parts = [] # These Parts are Labels in Boxes Need to be Updated in Every Game Cycle
 for player in range(22):
     if player <= 10:
-        border_color = 'skyblue'
+        border_color = '#3A86FF'
     else:
-        border_color = 'orange'
+        border_color = '#c0392b'
     player_box = tk.Frame(game_interface, width=250, height=60, highlightbackground=border_color, highlightthickness=2)
     lb_player_name = tk.Label(player_box)
     lb_player_position = tk.Label(player_box)
@@ -224,6 +232,9 @@ def return_main_menu():
     main_menu.pack()
 
 def initialise_game():
+    global state
+    state = 'playing'
+
     score['home_team'] = score['away_team'] = game_time['minute'] = game_time['second'] = 0
 
     global position, past_time, last_time
@@ -235,8 +246,8 @@ def initialise_game():
     global possession
     possession = 1
 
-    global backed
-    backed = False
+    global delayed
+    delayed = False
 
     event_box.delete(0, tk.END)
 
@@ -274,7 +285,7 @@ def update_time():
     global last_time, past_time
 
     now = time.time()
-    past_time += (now - last_time) * 5
+    past_time += (now - last_time) * 0.5
     last_time = now
     game_time['minute'] = math.trunc(past_time)
     game_time['second'] = math.trunc(math.modf(past_time)[0] * 60)
@@ -341,7 +352,7 @@ def update_actions():
 
 
 def update_tackle():
-    global possession, backed, position
+    global possession, delayed, position
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
 
@@ -374,14 +385,19 @@ def update_tackle():
         tackle_possibility = ((1 + defence_ability * 0.3) * defence_modification) / tackle_difficulty
         if random.random() < tackle_possibility:
             if random.randint(0, 1):
+                if possession == -1:
+                    color = '#3A86FF'
+                else:
+                    color = '#c0392b'
                 possession *= -1
                 random_time = past_time - random.random() * period
-                message = defender['name'] + ' grabbed the ball at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + '.'
-                event_box.insert(tk.END, message)
+                message = defender['name'] + ' tackled the ball at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '.'
+                event_box.insert(0, message)
+                event_box.itemconfig(0, {'fg': color})
                 return
 
             else:
-                backed = True
+                delayed = True
                 position -= random.randint(5, 15)
 
                 if position > 100:
@@ -393,10 +409,10 @@ def update_tackle():
 
 
 def update_advance():
-    global backed, position
+    global delayed, position
 
-    if backed:
-        backed = False
+    if delayed:
+        delayed = False
         return
 
     advance_result = 0
@@ -442,7 +458,7 @@ def update_advance():
 
 
 def update_shooting():
-    global possession, position
+    global possession, position, delayed
 
     if position * possession < 0:
         return
@@ -479,22 +495,34 @@ def update_shooting():
                 shooting_difficulty += (defence_ability + 5) * defence_modification / 2
 
         if random.random() < shooting_ability / shooting_difficulty:
-            shooting_possibility = (attack_ability * (0.5 + position * possession / 100 * 1.5)) / (keeper['defence'] * 3 + 20)
+            shooting_possibility = (attack_ability * (1 + position * possession / 100 * 5)) / (keeper['defence'] * 10 + 80)
             if random.random() < shooting_possibility:
+                if possession == 1:
+                    color = '#3A86FF'
+                else:
+                    color = '#c0392b'
+                delayed = True
                 score[number_teams[possession]] += 1
-                position = 0
                 possession *= -1
+                position = 0
                 random_time = past_time - random.random() * period
-                message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + '!'
-                event_box.insert(tk.END, message)
+                message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '!'
+                event_box.insert(0, message)
+                event_box.itemconfig(0, {'bg': color, 'fg': 'white'})
                 return
 
             else:
-                position = random.randint(20, 60) * possession * -1
+                if possession == 1:
+                    color = '#3A86FF'
+                else:
+                    color = '#c0392b'
+                delayed = True
                 possession *= -1
+                position = random.randint(20, 60) * possession * -1
                 random_time = past_time - random.random() * period
-                message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)) + ' but missed the goal.'
-                event_box.insert(tk.END, message)
+                message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + ' but missed the goal.'
+                event_box.insert(0, message)
+                event_box.itemconfig(0, {'fg': color})
                 return
 
 
