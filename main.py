@@ -8,26 +8,30 @@ import math
 import random
 
 
-state = 'main_menu'
+# -------------------------------------------------------Variables------------------------------------------------------
+
+
+state = 'main_menu' # State Decides What the Program Do in Every Loop
 last_time = 0
 past_time = 0
 game_time = {'minute': 0, 'second': 0}
-period = 0.5
+period = 0.5 # This Value Can Be Changed to Change the Gap of Every Cycle in the Game - Set to Half Minute as Default
 next_cycle = period
 
-configuration_name ='default'
-team_data = None
+configuration_name ='default' # The Default Configuration Name Is 'default'
+team_data = None # Team Data Have Not Loaded
 team_logos = {'main_menu': {}, 'game': {}}
+track_images = {'blue_track': None, 'red_track': None, 'blue_sign': None, 'red_sign': None, 'full_track': None}
 playing_teams = {'home_team': None, 'away_team': None}
-number_teams = {1: 'home_team', -1: 'away_team'}
+number_teams = {1: 'home_team', -1: 'away_team'} # 1 Represents Home Team - -1 Represents Away Team
 playing_players = {'home_team': {}, 'away_team': {}}
+
 score = {'home_team': 0, 'away_team': 0}
 position = 0
 possession = 1
-delayed = False
-track_images = {'blue_track': None, 'red_track': None, 'blue_sign': None, 'red_sign': None, 'full_track': None}
+delayed = False # This Variable Means Whether the Advancing of the Ball Is Delayed - If Positive the Game Will Skip One Advance Action
 
-
+# Root Is the Core of the Program
 root = tk.Tk()
 root.resizable(width=False, height=False)
 root.title('Abstract Football 2025')
