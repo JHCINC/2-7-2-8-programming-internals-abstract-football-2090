@@ -34,7 +34,7 @@ root.title('Abstract Football 2025')
 
 # ---------------------------------------------------Main Menu Widgets--------------------------------------------------
 
-# Instantiation of Frame "main_menu" as the Master of All the Main Menu Widgets
+# instantiation of Frame "main_menu" as the Master of All the Main Menu Widgets
 main_menu = tk.Frame(root, bg='#1D1D29')
 main_menu.pack() # Display Main Menu from the Beginning
 
@@ -76,9 +76,9 @@ lb_configurations.grid(column=1, row=4, pady=20)
 cbox_configuration.grid(column=1, row=5, pady=5)
 btn_load_configuration.grid(column=1, row=6, pady=40)
 
-# -------------------------------------------------Game Interface Widget------------------------------------------------
+# -------------------------------------------------Game interface Widget------------------------------------------------
 
-# Instantiation of Frame "game_interface" as the Master of All the Game Interface Widget
+# instantiation of Frame "game_interface" as the Master of All the Game interface Widget
 game_interface = tk.Frame(root, width=800, height=800)
 
 # Timer for the Game
@@ -89,8 +89,8 @@ game_home_team_logo = tk.Label(game_interface)
 game_away_team_logo = tk.Label(game_interface)
 
 # Labels for Team Names - Blue for the Home Team - Red for the Away Team
-lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='#3A86FF')
-lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20), fg='#c0392b')
+lb_home_team_name = tk.Label(game_interface, font=('Times New Roman', 20, 'bold'), fg='#3A86FF')
+lb_away_team_name = tk.Label(game_interface, font=('Times New Roman', 20, 'bold'), fg='#c0392b')
 
 # Labels for Team Scores and the Colon Between
 lb_home_team_score = tk.Label(game_interface, font=('Ariel', 80), fg='red')
@@ -105,11 +105,11 @@ track = tk.Label(game_interface)
 sign = tk.Label(game_interface, border=0)
 
 # Buttons for Functions Return, Pause and Restart
-btn_return = tk.Button(game_interface, width=8, height=1, text='Return', font=('Times New Roman', 15), bg='yellow')
-btn_pause = tk.Button(game_interface, width=8, height=1, text='Pause', font=('Times New Roman', 15), bg='yellow')
-btn_restart = tk.Button(game_interface, width=8, height=1, text='Restart', font=('Times New Roman', 15), bg='yellow')
+btn_return = tk.Button(game_interface, width=8, height=1, text='Return', font=('Helvetica', 15, 'bold'), bg='orange', fg='white')
+btn_pause = tk.Button(game_interface, width=8, height=1, text='Pause', font=('Helvetica', 15, 'bold'), bg='orange', fg='white')
+btn_restart = tk.Button(game_interface, width=8, height=1, text='Restart', font=('Helvetica', 15, 'bold'), bg='orange', fg='white')
 
-# Place all the Widgets through Grid
+# Place All the Widgets through Grid
 lb_timer.grid(column=3, row=0, pady=10)
 game_home_team_logo.grid(column=1, row=1)
 game_away_team_logo.grid(column=5, row=1)
@@ -120,17 +120,19 @@ lb_home_team_name.grid(column=1, row=2, pady=20)
 lb_away_team_name.grid(column=5, row=2, pady=20)
 event_box.grid(column=2, columnspan=3, row=2)
 track.grid(column=1, columnspan=5, row=3, padx=100, pady=30)
-btn_return.place(x=540, y=910)
+btn_return.place(x=500, y=910)
 btn_pause.place(x=690, y=910)
-btn_restart.place(x=840, y=910)
+btn_restart.place(x=880, y=910)
 
-# Player Box to Display All the Attributes of All the Players
+# Player Boxes to Display All the Attributes of All the Players
 player_box_parts = [] # These Parts are Labels in Boxes Need to be Updated in Every Game Cycle
 for player in range(22):
     if player <= 10:
         border_color = '#3A86FF'
     else:
         border_color = '#c0392b'
+
+    # Labels for Attributes in Player Boxes
     player_box = tk.Frame(game_interface, width=250, height=60, highlightbackground=border_color, highlightthickness=2)
     lb_player_name = tk.Label(player_box)
     lb_player_position = tk.Label(player_box)
@@ -141,6 +143,7 @@ for player in range(22):
     lb_player_stamina = tk.Label(player_box)
     lb_player_energy = tk.Label(player_box)
 
+    # Place All the Labels Through Grid
     lb_player_name.grid(column=0, row=0)
     lb_player_position.grid(column=0, row=1)
     lb_player_advance.grid(column=1, row=0)
@@ -150,11 +153,13 @@ for player in range(22):
     lb_player_stamina.grid(column=3, row=0)
     lb_player_energy.grid(column=3, row=1)
 
+    # Add the Labels in the List to Update Them Every Cycle
     player_box_parts.append(
         [lb_player_name, lb_player_position, lb_player_advance, lb_player_defence, lb_player_dribbling, lb_player_finishing,
          lb_player_stamina, lb_player_energy]
     )
 
+    # Arrange Player Boxes - Home Team on Left - Away Team on Right
     if player <= 5:
         column = 1
         row = 4 + player
@@ -174,6 +179,10 @@ for player in range(22):
     player_box.grid(column=column, row=row, padx=5, pady=10, sticky=sticky)
 
 
+# -------------------------------------------------------Functions------------------------------------------------------
+
+
+# When instantiating the Buttons, the Command of Buttons May Not Defined So We Must Bind Them Together Later
 def bind_button_commands():
     btn_start_game.config(command=start_game)
     btn_load_configuration.config(command=load_configuration)
@@ -182,22 +191,27 @@ def bind_button_commands():
     btn_restart.config(command=initialise_game)
 
 
+# Configuration includes the Data of Teams and Players
 def load_configuration():
     global team_data
-    path = os.path.abspath('.\\configurations\\' + cbox_configuration.get() + '.txt')
+    path = os.path.abspath('.\\configurations\\' + cbox_configuration.get() + '.txt') # Get the Path of the Configuration File
     with open(path) as configuration:
-        team_data = eval(configuration.read())
+        team_data = eval(configuration.read()) # The Configuration Is Written in the form of Dictionary - It Can Be Read Directly
 
+    # Set the Terms of Choosing Boxes of Teams - Set to Select a Team as Default
     teams = list(team_data.keys())
     teams.insert(0, 'Select a Team')
     cbox_home_team['values'] = cbox_away_team['values'] = teams
     cbox_home_team.current(0), cbox_away_team.current(0)
 
+    # Reload the Logos of Teams
     team_logos['main_menu'].clear(), team_logos['game'].clear()
     for team in teams:
         team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((250, 250)))
         team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
+        
 
+# Load the Images of the Track
 def load_track_images():
     for image in ('blue_track', 'red_track'):
         track_images[image] = Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png')))
@@ -205,16 +219,13 @@ def load_track_images():
         track_images[image] = ImageTk.PhotoImage(Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png'))))
 
 
-def update_main_menu():
-    playing_teams['home_team'] = cbox_home_team.get()
-    playing_teams['away_team'] = cbox_away_team.get()
-    main_menu_home_team_logo.config(image=team_logos['main_menu'][playing_teams['home_team']])
-    main_menu_away_team_logo.config(image=team_logos['main_menu'][playing_teams['away_team']])
 
 
+# Start the Game - Switch Between Main Menu and Game interface
 def start_game():
     global state
-
+    
+    # Error Preventing - Pop Up a Message Box If the User Has Not Select Both Two Teams
     if playing_teams['home_team'] == 'Select a Team' or playing_teams['away_team'] == 'Select a Team':
         tk.messagebox.showwarning('Warning', 'You must select both two teams.')
         return
@@ -225,12 +236,15 @@ def start_game():
     initialise_game()
 
 
+# Return to Main Menu - Switch Between Game interface and Main Menu
 def return_main_menu():
     global state
     state = 'main_menu'
     game_interface.pack_forget()
     main_menu.pack()
 
+
+# initialise the Football Game - Execute When Starting the Game or Restarting the Game
 def initialise_game():
     global state
     state = 'playing'
@@ -261,6 +275,7 @@ def initialise_game():
     last_time = time.time()
 
 
+# initialise the Players - Set Energy to 100 for Every One
 def initialise_players():
     playing_players['home_team'] = team_data[playing_teams['home_team']]['players'].copy()
     for player in playing_players['home_team']:
@@ -271,27 +286,19 @@ def initialise_players():
         player['energy'] = 100
 
 
+# initialise Team Logos in the Game interface
 def initialise_game_team_logos():
     game_home_team_logo.config(image=team_logos['game'][playing_teams['home_team']])
     game_away_team_logo.config(image=team_logos['game'][playing_teams['away_team']])
 
 
+# initialise the Labels of Team Names in the Game interface
 def initialise_game_team_names():
     lb_home_team_name.config(text=playing_teams['home_team'])
     lb_away_team_name.config(text=playing_teams['away_team'])
 
 
-def update_time():
-    global last_time, past_time
-
-    now = time.time()
-    past_time += (now - last_time) * 0.5
-    last_time = now
-    game_time['minute'] = math.trunc(past_time)
-    game_time['second'] = math.trunc(math.modf(past_time)[0] * 60)
-    lb_timer.config(text=str(game_time['minute']).zfill(2) + ' : ' + str(game_time['second']).zfill(2))
-
-
+# Pause the Game
 def pause():
     global state
     if state == 'pause':
@@ -300,111 +307,215 @@ def pause():
         state = 'pause'
 
 
+# This Function Is Used to Calculate the Position Modification of Every Player - Different Type of Players Have Different Calculation Method
 def calculate_modification(player, side):
-    relative_position = position * side
+    relative_position = position * side # Relative Position Is The Distance to Opponent's Goal
+    
+    # Keepers Do Not Participate in Tackle or Advance - They Only Defend in Shooting
     if player['position'] == 'keeper':
         return 0
-
+    
     elif player['position'] == 'attacker':
+        # Attackers Have No Efficiency in the Half Field Close to Their Own Goal
         if relative_position <= 0:
             return 0
+        # Closer to Their Opponent's Goal, They Have Bigger Efficiency
         elif 0 < relative_position < 60:
             return 0.4 + relative_position * 0.01
+        # Attackers Have 100% Efficiency in the One Fifth Field Close to Their Opponent's Goal
         elif relative_position >= 60:
             return 1
 
     elif player['position'] == 'midfield':
+        # Midfielder Have 40% Efficiency in the One Fifth Field Close to Their Own Goal
         if relative_position <= -60:
             return 0.4
+        # Closer to the Middle, They Have Bigger Efficiency
         elif -60 < relative_position < -20:
             return 1 - (-20 - relative_position) * 0.015
+        # Midfielder Have 100% Efficiency in the One Fifth Field in the Middle
         elif -20 <= relative_position <= 20:
             return 1
+        # Closer to the Middle, They Have Bigger Efficiency
         elif 20 < relative_position < 60:
             return 1 - (60 - relative_position) * 0.015
+        # Midfielder Have 40% Efficiency in the One Fifth Field Close to Their Opponent's Goal
         elif relative_position >= 60:
             return 0.4
 
     elif player['position'] == 'defender':
+        # Defenders Have 100% Efficiency in the One Fifth Field Close to Their Own Goal
         if relative_position <= -60:
             return 1
+        # Closer to Their Own Goal, They Have Bigger Efficiency
         elif -60 < relative_position < 0:
             return 1 + relative_position * 0.01
+        # Midfielder Have No Efficiency in the Half Field Close to Their Opponent's Goal
         elif relative_position >= 0:
             return 0
 
 
+# This Function Is Used to Calculate the Attributes of Players After Their Energy's Effect
 def calculate_ability(player):
+    # There Is No Effect When They Have More Than 70% Energy
     if player['energy'] > 70:
         return 1
+    # Their Attributes Will Be Between 95% and 80% When They Have Energy Between 70% and 40% (Not including 40%)
     elif player['energy'] > 40:
         return 0.95 - (70 - player['energy']) / 200
+    # Their Attributes Will Be Between 70% and 50% When They Have Energy Between 40% and 0%
     elif player['energy'] > 0:
         return 0.7 - (40 - player['energy']) / 200
+    # Their Attributes Will Be 50% When They Have Zero Energy
     else:
         return 0.5
 
 
+# Player Will Consume Some Energy Once They Participate in Any Action - Bigger the Position Modification, Higher the Energy Consumption
+def consume_energy(player, modification):
+    player['energy'] -= random.random() * (0.3 - player['stamina'] * 0.02) * modification
+    if player['energy'] < 0:
+        player['energy'] = 0
+
+
+# This Function Is Used to Add a Message to the Event Box
+def append_event(message, style):
+    event_box.insert(0, message)
+    event_box.itemconfig(0, style)
+
+
+def end_game():
+    global state
+    state = 'game_ended'
+    game_time['minute'] = 90
+    game_time['second'] = 0
+
+
+# --------------------------------------------------------Update--------------------------------------------------------
+# Update the Main Menu 
+def update_main_menu():
+    playing_teams['home_team'] = cbox_home_team.get()
+    playing_teams['away_team'] = cbox_away_team.get()
+    main_menu_home_team_logo.config(image=team_logos['main_menu'][playing_teams['home_team']])
+    main_menu_away_team_logo.config(image=team_logos['main_menu'][playing_teams['away_team']])
+
+
+# Update the Time in the Game 
+def update_time():
+    global last_time, past_time
+    now = time.time()
+    past_time += (now - last_time) * 0.5 # This Value Can Be Changed to Change the Speed of the Game
+    last_time = now
+    game_time['minute'] = math.trunc(past_time) # Covert the Change of Real Time into Game Time
+    game_time['second'] = math.trunc(math.modf(past_time)[0] * 60)
+    lb_timer.config(text=str(game_time['minute']).zfill(2) + ' : ' + str(game_time['second']).zfill(2)) # Update the Timer
+
+
+# Update the Showing Score Board in the Game
+def update_score():
+    lb_home_team_score.config(text=str(score['home_team']))
+    lb_away_team_score.config(text=str(score['away_team']))
+
+
+# Update the Track in the Game to Show the Position of the Ball
+def update_track():
+    blue_track = track_images['blue_track'].crop((0, 0, int(((position + 100) / 200) * 1278), 67))
+    red_track = track_images['red_track'].crop((int(((position + 100) / 200) * 1278), 0, 1278, 67))
+    full_track = Image.new('RGB', (1278, 67))
+    full_track.paste(blue_track, (0, 0))
+    full_track.paste(red_track, (blue_track.width, 0))
+    track_images['full_track'] = ImageTk.PhotoImage(full_track)
+    track.config(image=track_images['full_track'])
+
+    if possession == 1:
+        sign.config(image=track_images['blue_sign'])
+    else:
+        sign.config(image=track_images['red_sign'])
+    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=430)
+
+
+# Update Player Boxes to Show the Attributes of Players
+def update_player_box_parts():
+    for index in range(22):
+        if index <= 10:
+            player = playing_players['home_team'][index]
+        else:
+            player = playing_players['away_team'][index % 11]
+        parts = player_box_parts[index]
+        parts[0].config(text=player['name'])
+        parts[1].config(text=player['position'])
+        parts[2].config(text='advance: ' + str(round(player['advance'] * calculate_ability(player), 1)))
+        parts[3].config(text='defence: ' + str(round(player['defence'] * calculate_ability(player), 1)))
+        parts[4].config(text='dribbling: ' + str(round(player['dribbling'] * calculate_ability(player), 1)))
+        parts[5].config(text='finishing: ' + str(round(player['finishing'] * calculate_ability(player), 1)))
+        parts[6].config(text='stamina: ' + str(player['stamina']))
+        parts[7].config(text='energy: ' + str(round(player['energy'])))
+
+
+# --------------------------------------------------------Actions-------------------------------------------------------
+
+
+# Update Actions in Every Cycle - Composed of Update Tackle, Update Advance and Update Shooting - The Order Does Matter
 def update_actions():
     update_tackle()
     update_advance()
     update_shooting()
 
 
+'''In the process of update tackle, attackers are players who control the ball and they need attribute Dribbling to 
+keep the ball from being tackle by defenders, who need the attribute Defence. Every attacker and every defender will 
+have a dice value generated randomly with some advantage to attackers. Each attacker will compare the sum of Dribbling
+value and dice value to each defender with sum of Defence value and dice value. If one attacker win, the difficulty of 
+tackle will increase by a value calculated from the attacker's Dribbling. After calculated the difficulty of tackle,
+every defender will have a base value calculated from Defence value. Use this base value to divide by the difficulty of 
+tackle is the possibility to this defender to successful tackle the ball. The modifications of position and energy of 
+players will be calculated and affect the result.'''
+
 def update_tackle():
     global possession, delayed, position
+    # Get Attackers and Defenders Who Have More Than 0 Position Efficiency
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
-
-    attack_rolls = [random.randint(0, 10) for _ in attackers]
+    attack_dices = [random.randint(0, 10) for _ in attackers] # Generate Random Dice Values
 
     for defender in defenders:
         tackle_difficulty = 5
-        defence_ability = defender['defence'] * calculate_ability(defender)
-        defence_modification = calculate_modification(defender, possession * -1)
-        defence_roll = random.randint(0, 8)
+        defence_ability = defender['defence'] * calculate_ability(defender) # Attribute Value Is Affected by Energy
+        defence_modification = calculate_modification(defender, possession * -1) # Tackle Base Value Is Affected by Position
+        defence_dice = random.randint(0, 8) # Generate Random Dice Value
 
-        defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
-        if defender['energy'] < 0:
-            defender['energy'] = 0
+        consume_energy(defender, defence_modification)
 
         for attacker_index in range(len(attackers)):
             attacker = attackers[attacker_index]
-            attack_ability = attacker['dribbling'] * calculate_ability(attacker)
-            attack_modification = calculate_modification(attacker, possession)
-            attack_roll = attack_rolls[attacker_index]
+            attack_ability = attacker['dribbling'] * calculate_ability(attacker) # Attribute Value Is Affected by Energy
+            attack_modification = calculate_modification(attacker, possession) # increasing Tackle Difficulty Is Affected by Position
+            attack_dice = attack_dices[attacker_index]
 
-            attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
-            if attacker['energy'] < 0:
-                attacker['energy'] = 0
+            consume_energy(attacker, attack_modification)
 
-            if attack_ability + attack_roll >= defence_ability + defence_roll:
-                difficulty_increase = (10 + attack_ability) * attack_modification
+            if attack_ability + attack_dice >= defence_ability + defence_dice: # If Attacker Win the Comparison, Tackle Difficulty Will increase
+                difficulty_increase = (10 + attack_ability) * attack_modification 
                 tackle_difficulty += difficulty_increase
 
+        # Tackle Possibility Equals Tackle Base Divided by Tackle Difficulty
         tackle_possibility = ((1 + defence_ability * 0.3) * defence_modification) / tackle_difficulty
-        if random.random() < tackle_possibility:
-            if random.randint(0, 1):
-                if possession == -1:
-                    color = '#3A86FF'
-                else:
-                    color = '#c0392b'
-                possession *= -1
-                random_time = past_time - random.random() * period
+        if random.random() < tackle_possibility: # If Tackle Successes
+            if random.randint(0, 1): # There Is One Half Possibility That Defenders Can Tackle The Ball
+                random_time = past_time - random.random() * period # Generate Random Time for Event Message 
                 message = defender['name'] + ' tackled the ball at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '.'
-                event_box.insert(0, message)
-                event_box.itemconfig(0, {'fg': color})
+                append_event(message, {'fg': {1: '#c0392b', -1: '#3A86FF'}[possession]})
+                possession *= -1
                 return
 
-            else:
+            else: # There Is Another Half Possibility That Defenders Can Delay The Advancing Of The Ball
                 delayed = True
-                position -= random.randint(5, 15)
+                position -= round(random.randint(5, 15) * possession) # Randomly Generate the Delaying Distance
 
                 if position > 100:
                     position = 100
                 elif position < -100:
                     position = -100
-
                 return
 
 
@@ -418,30 +529,26 @@ def update_advance():
     advance_result = 0
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
-    defence_rolls = [random.randrange(0, 5) for _ in defenders]
+    defence_dices = [random.randrange(0, 5) for _ in defenders] # Generate Random Dice Values
 
     for attacker in attackers:
         attack_efficiency = 1
-        attack_ability = attacker['advance'] * calculate_ability(attacker)
+        attack_ability = attacker['advance'] * calculate_ability(attacker) # Attribute Value Is Affected by Energy
         attack_modification = calculate_modification(attacker, possession)
-        attack_roll = random.randrange(0, 6)
+        attack_dice = random.randrange(0, 6) # Generate Random Dice Value
         attack_expectation = 2 + 0.4 * attack_ability * attack_modification
 
-        attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
-        if attacker['energy'] < 0:
-            attacker['energy'] = 0
+        consume_energy(attacker, attack_modification)
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
-            defence_ability = defender['defence'] * calculate_ability(defender)
+            defence_ability = defender['defence'] * calculate_ability(defender) # Attribute Value Is Affected by Energy
             defence_modification = calculate_modification(defender, possession * -1)
-            defence_roll = defence_rolls[defender_index]
+            defence_dice = defence_dices[defender_index]
 
-            defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
-            if defender['energy'] < 0:
-                defender['energy'] = 0
+            consume_energy(defender, defence_modification)
 
-            if (defence_ability + defence_roll) > (attack_ability + attack_roll):
+            if (defence_ability + defence_dice) > (attack_ability + attack_dice):
                 attack_efficiency -= (0.1 + defence_ability * 0.02) * defence_modification
 
         if attack_efficiency > 0:
@@ -466,30 +573,26 @@ def update_shooting():
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
     keeper = [player for player in playing_players[number_teams[possession * -1]] if player['position'] == 'keeper'][0]
-    defence_rolls = [random.randint(0, 5) for _ in defenders]
+    defence_dices = [random.randint(0, 5) for _ in defenders]
 
     for attacker in attackers:
         shooting_difficulty = 20
-        attack_ability = attacker['finishing'] * calculate_ability(attacker)
+        attack_ability = attacker['finishing'] * calculate_ability(attacker) # Attribute Value Is Affected by Energy
         attack_modification = calculate_modification(attacker, possession)
-        attack_roll = random.randint(0, 6)
+        attack_dice = random.randint(0, 6)
         shooting_ability = attack_ability * 0.3 * attack_modification * (1 + ((position * possession) / 50) ** 2)
 
-        attacker['energy'] -= random.random() * (0.5 - attacker['stamina'] * 0.035) * attack_modification
-        if attacker['energy'] < 0:
-            attacker['energy'] = 0
+        consume_energy(attacker, attack_modification)
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
-            defence_ability = defender['defence'] * calculate_ability(defender)
+            defence_ability = defender['defence'] * calculate_ability(defender) # Attribute Value Is Affected by Energy
             defence_modification = calculate_modification(defender, possession * -1)
-            defence_roll = defence_rolls[defender_index]
+            defence_dice = defence_dices[defender_index]
 
-            defender['energy'] -= random.random() * (0.5 - defender['stamina'] * 0.035) * defence_modification
-            if defender['energy'] < 0:
-                defender['energy'] = 0
+            consume_energy(defender, defence_modification)
 
-            if defence_ability + defence_roll > attack_ability + attack_roll:
+            if defence_ability + defence_dice > attack_ability + attack_dice:
                 shooting_difficulty += (defence_ability + 5) * defence_modification
             else:
                 shooting_difficulty += (defence_ability + 5) * defence_modification / 2
@@ -497,80 +600,29 @@ def update_shooting():
         if random.random() < shooting_ability / shooting_difficulty:
             shooting_possibility = (attack_ability * (1 + position * possession / 100 * 5)) / (keeper['defence'] * 10 + 80)
             if random.random() < shooting_possibility:
-                if possession == 1:
-                    color = '#3A86FF'
-                else:
-                    color = '#c0392b'
+                random_time = past_time - random.random() * period
+                message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '!'
+                append_event(message, {'bg': {1: '#3A86FF', -1: '#c0392b'}[possession], 'fg': 'white'})
                 delayed = True
                 score[number_teams[possession]] += 1
                 possession *= -1
                 position = 0
-                random_time = past_time - random.random() * period
-                message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '!'
-                event_box.insert(0, message)
-                event_box.itemconfig(0, {'bg': color, 'fg': 'white'})
                 return
 
             else:
-                if possession == 1:
-                    color = '#3A86FF'
-                else:
-                    color = '#c0392b'
+                random_time = past_time - random.random() * period
+                message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + ' but missed the goal.'
+                append_event(message, {'fg': {1: '#3A86FF', -1: '#c0392b'}[possession]})
                 delayed = True
                 possession *= -1
                 position = random.randint(20, 60) * possession * -1
-                random_time = past_time - random.random() * period
-                message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + ' but missed the goal.'
-                event_box.insert(0, message)
-                event_box.itemconfig(0, {'fg': color})
                 return
 
 
-def update_track():
-    blue_track = track_images['blue_track'].crop((0, 0, int(((position + 100) / 200) * 1278), 67))
-    red_track = track_images['red_track'].crop((int(((position + 100) / 200) * 1278), 0, 1278, 67))
-    full_track = Image.new('RGB', (1278, 67))
-    full_track.paste(blue_track, (0, 0))
-    full_track.paste(red_track, (blue_track.width, 0))
-    track_images['full_track'] = ImageTk.PhotoImage(full_track)
-    track.config(image=track_images['full_track'])
-
-    if possession == 1:
-        sign.config(image=track_images['blue_sign'])
-    else:
-        sign.config(image=track_images['red_sign'])
-    sign.place(x=11 + int(((position + 100) / 200) * 1367), y=430)
+# ---------------------------------------------------------Main---------------------------------------------------------
 
 
-def update_player_box_parts():
-    for index in range(22):
-        if index <= 10:
-            player = playing_players['home_team'][index]
-        else:
-            player = playing_players['away_team'][index % 11]
-        parts = player_box_parts[index]
-        parts[0].config(text=player['name'])
-        parts[1].config(text=player['position'])
-        parts[2].config(text='advance: ' + str(round(player['advance'] * calculate_ability(player), 1)))
-        parts[3].config(text='defence: ' + str(round(player['defence'] * calculate_ability(player), 1)))
-        parts[4].config(text='dribbling: ' + str(round(player['dribbling'] * calculate_ability(player), 1)))
-        parts[5].config(text='finishing: ' + str(round(player['finishing'] * calculate_ability(player), 1)))
-        parts[6].config(text='stamina: ' + str(player['stamina']))
-        parts[7].config(text='energy: ' + str(round(player['energy'])))
-
-
-def update_score():
-    lb_home_team_score.config(text=str(score['home_team']))
-    lb_away_team_score.config(text=str(score['away_team']))
-
-
-def end_game():
-    global state
-    state = 'game_ended'
-    game_time['minute'] = 90
-    game_time['second'] = 0
-
-
+# The main Function Is the Mainloop of the Game - It Executes Before Every Time When Tkinter Updates the Widgets
 def main():
     global next_cycle
 
@@ -578,14 +630,14 @@ def main():
         update_main_menu()
 
     elif state == 'playing':
-        update_time()
-        if past_time > next_cycle:
+        update_time() # Update Time When the Game Is Playing
+        if past_time > next_cycle: # Determine Whether Reached the Time for a Cycle
             next_cycle += period
             update_actions()
             update_score()
             update_track()
             update_player_box_parts()
-            if past_time >= 90:
+            if past_time >= 90: # Determine Whether the Time Is Up
                 end_game()
 
     elif state == 'pause':
@@ -595,9 +647,10 @@ def main():
     elif state == 'end_game':
         pass
 
-    root.after(1, main)
+    root.after(1, main) # This Give the Program the Order to Execute main Function Again
 
 
+# These Functions Will Be Executed At the First When Start to Run the Program
 load_configuration()
 load_track_images()
 bind_button_commands()
