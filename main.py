@@ -524,20 +524,20 @@ def update_tackle():
                 return
 
 
-
 '''After the Tackle process is the Advance process. The Attackers are players who control the ball and attempt to
 advance it toward opponent's goal, They need attribute Advance. Defenders are trying to slow down the advancing speed
 of the ball, they need attribute Defence. Every attacker and every defender will have a dice value generated randomly 
 with some advantage to attackers. Each attacker will compare the sum of Advance value and dice value to each defender 
-with sum of Defence value and dice value. If one defender wins, it will gives a negative bonus to the efficiency that 
-the attacker can advance the ball. Multiple defenders can win one attacker so the efficiency can be zero and that means
-the attacker will not help to advance the ball. The Distances each attacker can advance the ball is calculated from the 
-Advance'''
+with sum of Defence value and dice value. If one defender wins, it will gives a negative bonus calculated from attribute 
+Defence and position modification to the efficiency that the attacker can advance the ball. Multiple defenders can win 
+one attacker so the efficiency can be zero and that means the attacker will not help to advance the ball. The Distances 
+each attacker can advance the ball is calculated from the attribute Advance, advance efficiency and position 
+modification.'''
 
 def update_advance():
     global delayed, position
 
-    if delayed:
+    if delayed: # If the Ball Is Delayed, Skip This Advance For Once
         delayed = False
         return
 
@@ -549,28 +549,28 @@ def update_advance():
     for attacker in attackers:
         attack_efficiency = 1
         attack_ability = attacker['advance'] * calculate_ability(attacker) # Attribute Value Is Affected by Energy
-        attack_modification = calculate_modification(attacker, possession)
+        attack_modification = calculate_modification(attacker, possession) # Attack Expectation Is Affected by Position Modification
         attack_dice = random.randrange(0, 6) # Generate Random Dice Value
-        attack_expectation = 2 + 0.4 * attack_ability * attack_modification
+        attack_expectation = 2 + 0.4 * attack_ability * attack_modification # The Expected Distance Can Be Advanced
 
         consume_energy(attacker, attack_modification)
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
             defence_ability = defender['defence'] * calculate_ability(defender) # Attribute Value Is Affected by Energy
-            defence_modification = calculate_modification(defender, possession * -1)
+            defence_modification = calculate_modification(defender, possession * -1) # The Decreasing Attack Efficiency Is Affected by Position Modification
             defence_dice = defence_dices[defender_index]
 
             consume_energy(defender, defence_modification)
 
             if (defence_ability + defence_dice) > (attack_ability + attack_dice):
-                attack_efficiency -= (0.1 + defence_ability * 0.02) * defence_modification
+                attack_efficiency -= (0.1 + defence_ability * 0.02) * defence_modification # Attack Efficiency Will Decrease If Defender Wins the Comparison
 
-        if attack_efficiency > 0:
+        if attack_efficiency > 0: # One Attacker Can Advance the Ball If Attack Efficiency Is Greater Than 0
             attack_result = attack_efficiency * attack_expectation
             advance_result += attack_result
 
-    random_modification = random.randint(0, 8)
+    random_modification = random.randint(0, 8) # After All, the Ball Can Be Advance for An Extra Distance Generated Randomly
     position += round(advance_result + random_modification) * possession
 
     if position > 100:
@@ -578,6 +578,18 @@ def update_advance():
     elif position < -100:
         position = -100
 
+
+'''The final action is shooting. The attackers need the attribute Shooting to find the chance to shoot while defenders
+need attribute Defence to prevent the shooting. Every player has a dice value with some advantage to attackers. Every 
+attacker will attempt to find a chance to shoot, the possibility for one attacker to find the chance to shoot equals 
+shooting base value divided by shooting difficulty. The base value is calculated from one attacker's attribute Shooting,
+position modification and a modification increasing in square when the ball get closer to opponent's goal. Every attacker 
+will compare the sum of Shooting value and dice value to every defender with the sum of Defence value and dice value. If 
+a defender wins, the shooting difficulty will increase by a value calculated from the defender's Defence value and 
+position modification. If the attacker wins, the shooting difficulty will still increase but only one half. If one 
+attacker successfully find the chance to shoot he will instantly shoot. The possibility to have a goal is calculated
+from the shooter's Shooting value, the goalkeeper's Defence value and the distance between the ball and the goal, but 
+position modification of the shooter will not be calculated at that stage.'''
 
 def update_shooting():
     global possession, position, delayed
@@ -588,34 +600,34 @@ def update_shooting():
     attackers = [player for player in playing_players[number_teams[possession]] if calculate_modification(player, possession) > 0]
     defenders = [player for player in playing_players[number_teams[possession * -1]] if calculate_modification(player, possession * -1) > 0]
     keeper = [player for player in playing_players[number_teams[possession * -1]] if player['position'] == 'keeper'][0]
-    defence_dices = [random.randint(0, 5) for _ in defenders]
+    defence_dices = [random.randint(0, 5) for _ in defenders] # Generate Random Dice Values
 
     for attacker in attackers:
         shooting_difficulty = 20
         attack_ability = attacker['finishing'] * calculate_ability(attacker) # Attribute Value Is Affected by Energy
-        attack_modification = calculate_modification(attacker, possession)
-        attack_dice = random.randint(0, 6)
-        shooting_ability = attack_ability * 0.3 * attack_modification * (1 + ((position * possession) / 50) ** 2)
+        attack_modification = calculate_modification(attacker, possession) # The Possibility to Find a Chance Is Affected by Position Modification
+        attack_dice = random.randint(0, 6) # Generate Random Dice Value
+        shooting_ability = attack_ability * 0.3 * attack_modification * (1 + ((position * possession) / 50) ** 2) # The Base Value to Calculate the Possibility to Find a Chance
 
         consume_energy(attacker, attack_modification)
 
         for defender_index in range(len(defenders)):
             defender = defenders[defender_index]
             defence_ability = defender['defence'] * calculate_ability(defender) # Attribute Value Is Affected by Energy
-            defence_modification = calculate_modification(defender, possession * -1)
+            defence_modification = calculate_modification(defender, possession * -1) # Increasing Shooting Difficulty Is Affected by Position Modification
             defence_dice = defence_dices[defender_index]
 
             consume_energy(defender, defence_modification)
 
             if defence_ability + defence_dice > attack_ability + attack_dice:
-                shooting_difficulty += (defence_ability + 5) * defence_modification
+                shooting_difficulty += (defence_ability + 5) * defence_modification # If Defender Wins, Shooting Difficulty Will Increase
             else:
-                shooting_difficulty += (defence_ability + 5) * defence_modification / 2
+                shooting_difficulty += (defence_ability + 5) * defence_modification / 2 # If Attacker Wins, Shooting Difficulty Will Increase by a Half
 
-        if random.random() < shooting_ability / shooting_difficulty:
+        if random.random() < shooting_ability / shooting_difficulty: # If Attacker Finds a Chance, He Will Shoot
             shooting_possibility = (attack_ability * (1 + position * possession / 100 * 5)) / (keeper['defence'] * 10 + 80)
             if random.random() < shooting_possibility:
-                random_time = past_time - random.random() * period
+                random_time = past_time - random.random() * period # Generate Random Time for the Event Box
                 message = attacker['name'] + ' scored a Goal at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + '!'
                 append_event(message, {'bg': {1: '#3A86FF', -1: '#c0392b'}[possession], 'fg': 'white'})
                 delayed = True
@@ -625,7 +637,7 @@ def update_shooting():
                 return
 
             else:
-                random_time = past_time - random.random() * period
+                random_time = past_time - random.random() * period # Generate Random Time for the Event Box
                 message = attacker['name'] + ' took a shot at ' + str(math.trunc(random_time)).zfill(2) + ' : ' + str(math.trunc(math.modf(random_time)[0] * 60)).zfill(2) + ' but missed the goal.'
                 append_event(message, {'fg': {1: '#3A86FF', -1: '#c0392b'}[possession]})
                 delayed = True
