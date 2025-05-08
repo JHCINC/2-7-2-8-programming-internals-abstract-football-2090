@@ -211,16 +211,16 @@ def load_configuration():
     # Reload the Logos of Teams
     team_logos['main_menu'].clear(), team_logos['game'].clear()
     for team in teams:
-        team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((250, 250)))
-        team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\asset\\team_logos\\' + team + '.png')).resize((200, 200)))
+        team_logos['main_menu'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\assets\\team_logos\\' + team + '.png')).resize((250, 250)))
+        team_logos['game'][team] = ImageTk.PhotoImage(Image.open(os.path.abspath('.\\assets\\team_logos\\' + team + '.png')).resize((200, 200)))
         
 
 # Load the Images of the Track
 def load_track_images():
     for image in ('blue_track', 'red_track'):
-        track_images[image] = Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png')))
+        track_images[image] = Image.open((os.path.abspath('.\\assets\\track_images\\' + image + '.png')))
     for image in ('blue_sign', 'red_sign'):
-        track_images[image] = ImageTk.PhotoImage(Image.open((os.path.abspath('.\\asset\\track_images\\' + image + '.png'))))
+        track_images[image] = ImageTk.PhotoImage(Image.open((os.path.abspath('.\\assets\\track_images\\' + image + '.png'))))
 
 
 
