@@ -472,8 +472,9 @@ have a dice value generated randomly with some advantage to attackers. Each atta
 value and dice value to each defender with sum of Defence value and dice value. If one attacker win, the difficulty of 
 tackle will increase by a value calculated from the attacker's Dribbling. After calculated the difficulty of tackle,
 every defender will have a base value calculated from Defence value. Use this base value to divide by the difficulty of 
-tackle is the possibility to this defender to successful tackle the ball. The modifications of position and energy of 
-players will be calculated and affect the result.'''
+tackle is the possibility to this defender to successful tackle the ball. Even if the tackle is successful, there is
+only one half possibility to get the possession of the ball and another half possibility to delay but not to get the
+ball. The modifications of position and energy of players will be calculated and affect the result. '''
 
 def update_tackle():
     global possession, delayed, position
@@ -522,6 +523,16 @@ def update_tackle():
                     position = -100
                 return
 
+
+
+'''After the Tackle process is the Advance process. The Attackers are players who control the ball and attempt to
+advance it toward opponent's goal, They need attribute Advance. Defenders are trying to slow down the advancing speed
+of the ball, they need attribute Defence. Every attacker and every defender will have a dice value generated randomly 
+with some advantage to attackers. Each attacker will compare the sum of Advance value and dice value to each defender 
+with sum of Defence value and dice value. If one defender wins, it will gives a negative bonus to the efficiency that 
+the attacker can advance the ball. Multiple defenders can win one attacker so the efficiency can be zero and that means
+the attacker will not help to advance the ball. The Distances each attacker can advance the ball is calculated from the 
+Advance'''
 
 def update_advance():
     global delayed, position
